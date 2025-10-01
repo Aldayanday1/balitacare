@@ -70,7 +70,7 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
                 opacity: _opacityText,
                 duration: Duration(milliseconds: 1000),
                 child: Text(
-                  '© 2024 Aldi TI UMY 21 & Team. All rights reserved.',
+                  '© 2025 Aldi TI UMY 21 & Team. All rights reserved.',
                   style: TextStyle(
                     fontSize: MediaQuery.of(context).size.width * 0.031,
                     color: Colors.grey[700],
