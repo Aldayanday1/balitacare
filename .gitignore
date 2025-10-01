@@ -1,0 +1,113 @@
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.buildlog/
+.history
+.svn/
+migrate_working_dir/
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# The .vscode folder contains launch configuration and tasks you configure in
+# VS Code which you may wish to be included in version control, so this line
+# is commented out by default.
+#.vscode/
+
+# Flutter/Dart/Pub related
+**/doc/api/
+**/ios/Flutter/.last_build_id
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+/build/
+
+# Symbolication related
+app.*.symbols
+
+# Obfuscation related
+app.*.map.json
+
+# Android Studio will place build artifacts here
+/android/app/debug
+/android/app/profile
+/android/app/release
+
+# ============================================
+# SENSITIVE DATA - DO NOT COMMIT TO GITHUB
+# ============================================
+
+# Environment variables and configuration files
+.env
+.env.local
+.env.*.local
+config.dart
+app_config.dart
+secrets.dart
+
+# Database files (local SQLite data)
+*.db
+*.sqlite
+*.sqlite3
+*.db-shm
+*.db-wal
+
+# Excel/Export files (may contain sensitive data)
+*.xlsx
+*.xls
+exports/
+downloads/
+
+# Local storage and cache
+*.hive
+*.isar
+*.realm
+
+# API Keys and credentials
+google-services.json
+GoogleService-Info.plist
+firebase_options.dart
+
+# Backup files
+*.backup
+*.bak
+*.tmp
+
+# Test data with real information
+test_data/
+sample_data/
+mock_data/
+
+# Personal notes and documentation
+NOTES.md
+TODO_PERSONAL.md
+.private/
+
+# Generated keys and certificates
+*.keystore
+*.jks
+*.p12
+*.key
+*.pem
+key.properties
+
+# iOS specific sensitive files
+**/ios/Runner/GoogleService-Info.plist
+**/ios/Runner/Info-prod.plist
+
+# Android specific sensitive files
+**/android/app/google-services.json
+**/android/key.properties
+**/android/app/upload-keystore.jks
+
+# Local configuration
+local.properties
