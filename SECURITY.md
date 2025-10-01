@@ -112,7 +112,7 @@ final dummyBalita = Balita(
 ### 📧 **Kontak untuk Security Issues**
 
 Jika menemukan security vulnerability, hubungi:
-- Email: security@balitacare.id
+- Email: onlymarfa69@gmail.com
 - Jangan buat public issue di GitHub
 
 ---
