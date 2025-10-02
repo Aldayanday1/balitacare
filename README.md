@@ -367,7 +367,11 @@ Terima kasih kepada:
 - **SQLite Team** - Robust database engine
 - **Open Source Community** - Inspiring packages & tools
 - **Canva** - Media desain  
-- **Ikon & Gambar** - Dari berbagai sumber (beberapa mungkin terlupa)
+- **Asset Creators** - Icons, images, dan graphics dari berbagai sumber
+
+**📜 Lihat [CREDITS.md](CREDITS.md) untuk daftar lengkap atribusi dan lisensi semua komponen yang digunakan.**
+
+**Note:** Beberapa asset mungkin bersumber dari platform yang tidak terdokumentasi dengan lengkap. Jika Anda adalah creator dari asset yang digunakan dan ingin atribusi yang tepat atau memiliki concern tentang lisensi, silakan hubungi kami.
 
 </div>
 
@@ -404,7 +408,28 @@ Jika proyek ini membantu Anda, jangan lupa:
 
 ---
 
-## 📋 **Changelog**
+## � **License**
+
+<div align="center">
+
+This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+
+### **Open Source & Free**
+✅ Free to use, modify, and distribute  
+✅ Commercial use allowed  
+✅ Attribution appreciated but not required  
+
+### **Third-Party Components**
+This project uses various open source packages and assets. See [CREDITS.md](CREDITS.md) for complete attributions and license information of all third-party components.
+
+### **Healthcare Disclaimer**
+⚠️ This software is for informational purposes only and should not replace professional medical advice. Always consult qualified healthcare providers for medical decisions.
+
+</div>
+
+---
+
+## �📋 **Changelog**
 
 ### **v1.0.0 (Current)**
 - ✅ Core CRUD operations untuk data balita

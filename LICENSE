@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) 2025 Mochamad Aldi Raihan Fachrizal
+Copyright (c) 2024-2025 Mochamad Aldi Raihan Fachrizal (BalitaCare Team)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -19,3 +19,39 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+---
+
+## Third-Party Licenses and Attributions
+
+This software uses open source packages and resources. See CREDITS.md for detailed
+attributions of all third-party components, assets, and resources used in this project.
+
+## Important Notes
+
+### Assets Attribution
+Some assets (icons, images, graphics) in this project may have been sourced from various
+platforms over time during development. While we have made every effort to use royalty-free
+and openly licensed resources, specific sources may not have been documented initially.
+
+If you are the creator of any asset used in this project and would like:
+- Proper attribution to be added
+- Your work to be removed
+- Licensing clarification
+
+Please contact us at: onlymarfa69@gmail.com
+
+We are committed to respecting intellectual property rights and will promptly address
+any concerns.
+
+### Healthcare Data Notice
+This software is designed to handle sensitive healthcare information. Users are responsible
+for ensuring compliance with applicable data protection regulations (e.g., Indonesia's
+Personal Data Protection Law, HIPAA, GDPR) when using this software in production
+environments.
+
+### Disclaimer
+This software is provided for informational and educational purposes. It should not be
+used as a substitute for professional medical advice, diagnosis, or treatment. Always
+seek the advice of qualified healthcare providers with questions regarding medical
+conditions.
