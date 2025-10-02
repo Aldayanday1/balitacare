@@ -398,17 +398,11 @@ Jika proyek ini membantu Anda, jangan lupa:
 [![GitHub stars](https://img.shields.io/github/stars/Aldayanday1/balitacare?style=social)](https://github.com/Aldayanday1/balitacare/stargazers)
 [![GitHub forks](https://img.shields.io/github/forks/Aldayanday1/balitacare?style=social)](https://github.com/Aldayanday1/balitacare/network)
 
----
-
-### **🚀 "Kesehatan balita adalah investasi masa depan bangsa"**
-
-**Made with ❤️ in Indonesia** 
-
 </div>
 
 ---
 
-## � **License**
+## 📜 **License**
 
 <div align="center">
 
@@ -429,7 +423,7 @@ This project uses various open source packages and assets. See [CREDITS.md](CRED
 
 ---
 
-## �📋 **Changelog**
+## 📝 **Changelog**
 
 ### **v1.0.0 (Current)**
 - ✅ Core CRUD operations untuk data balita

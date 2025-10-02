@@ -290,7 +290,7 @@ If you are the creator or copyright holder of any asset used in this project and
 **Please contact us immediately at:**
 - 📧 Email: onlymarfa69@gmail.com
 - 💬 Telegram: [@aldayanday1](https://t.me/aldayanday1)
-- 🐛 GitHub Issues: [github.com/Aldayanday1/balitacare/issues](https://github.com/Aldayanday1/balitacare/issues)
+- 💡 GitHub Issues: [github.com/Aldayanday1/balitacare/issues](https://github.com/Aldayanday1/balitacare/issues)
 
 We are committed to respecting intellectual property rights and will promptly:
 - Add proper attribution
