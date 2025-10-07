@@ -1,5 +1,5 @@
 workflows:
-  ios-release-no-codesign:
+  ios-release-no-shorebird:
     name: iOS Release (No Code Sign)
     max_build_duration: 60
     environment:
@@ -18,35 +18,32 @@ workflows:
         script: |
           dart run flutter_launcher_icons
 
-      - name: Build iOS release and create IPA (fixed)
+      - name: Build iOS release and create IPA
         script: |
           # Build iOS release without codesigning
           flutter build ios --release --no-codesign
           
-          # Go to build output
+          # Make sure artifacts directory exists
+          mkdir -p $CM_BUILD_DIR/artifacts
+          
+          # Go to build folder
           cd build/ios/iphoneos
           
           # Remove old Payload if exists
           rm -rf Payload
           
-          # Make sure Runner.app exists
-          if [ ! -d "Runner.app" ]; then
-            echo "Error: Runner.app not found! Build failed."
-            exit 1
-          fi
-          
           # Create Payload folder and copy Runner.app
           mkdir Payload
           cp -r Runner.app Payload/
           
-          # Zip Payload into IPA with professional name
+          # Create IPA with professional name
           zip -r $CM_BUILD_DIR/artifacts/Balitacare.ipa Payload
           
           # Clean up Payload folder
           rm -rf Payload
           
-          # Verify IPA content
-          unzip -l $CM_BUILD_DIR/artifacts/Balitacare.ipa
+          # Verify IPA was created
+          ls -lh $CM_BUILD_DIR/artifacts/
 
     artifacts:
       - $CM_BUILD_DIR/artifacts/*.ipa
