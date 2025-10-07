@@ -12,9 +12,9 @@ workflows:
         XCODE_WORKSPACE: "ios/Runner.xcworkspace"
         XCODE_SCHEME: "Runner"
       # Uncomment setelah setup code signing di Codemagic UI:
-      # ios_signing:
-      #   distribution_type: development
-      #   bundle_identifier: com.aldayanday.balitacare
+      ios_signing:
+        distribution_type: development
+        bundle_identifier: com.aldayanday.balitacare
     scripts:
       - name: Clean project
         script: |
