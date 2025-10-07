@@ -22,21 +22,23 @@ workflows:
         script: |
           dart run flutter_launcher_icons
 
-      - name: Build iOS (no code sign - for testing only)
+      - name: Build iOS and create IPA
         script: |
           # Build without codesigning for development/testing
           flutter build ios --release --no-codesign
+          
+          # Create artifacts directory
+          mkdir -p $CM_BUILD_DIR/artifacts
           
           # Create IPA manually without signing
           cd build/ios/iphoneos
           mkdir -p Payload
           cp -r Runner.app Payload/
-          zip -r Balitacare-unsigned.ipa Payload
+          zip -r $CM_BUILD_DIR/artifacts/Balitacare-unsigned.ipa Payload
+          rm -rf Payload
           
-      - name: Move artifacts
-        script: |
-          mkdir -p $CM_BUILD_DIR/artifacts
-          cp build/ios/iphoneos/Balitacare-unsigned.ipa $CM_BUILD_DIR/artifacts/
+          # Verify IPA was created
+          ls -lh $CM_BUILD_DIR/artifacts/
 
     artifacts:
       - $CM_BUILD_DIR/artifacts/*.ipa
