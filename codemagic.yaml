@@ -20,41 +20,20 @@ workflows:
 
       - name: Build iOS and create IPA (AltStore-ready)
         script: |
-          set -euo pipefail
-          echo "Attempt: flutter build ios --release --no-codesign"
+          set -e
+          echo "Building iOS (no codesign)"
+          flutter build ios --release --no-codesign
+
           ARTIFACTS_DIR="$CM_BUILD_DIR/artifacts"
           mkdir -p "$ARTIFACTS_DIR"
 
-          if flutter build ios --release --no-codesign; then
-            echo "flutter build succeeded"
-          else
-            echo "flutter build failed — attempting xcodebuild (no codesign) fallback"
-            # Try xcodebuild archive with signing disabled (fallback)
-            cd ios
-            # Clean previous build products
-            xcodebuild clean -workspace Runner.xcworkspace -scheme Runner -configuration Release || true
-            # Archive without allowing code signing
-            xcodebuild -workspace Runner.xcworkspace -scheme Runner -configuration Release -sdk iphoneos -archivePath ../build/Runner.xcarchive CODE_SIGNING_ALLOWED=NO || {
-              echo "xcodebuild archive failed"; exit 5;
-            }
-            cd ..
-          fi
-
-          # Find the built Runner.app (search typical locations)
+          # Find the .app produced by the build (search under build/ios)
           APP_PATH=$(find build/ios -type d -name "Runner.app" | head -n 1 || true)
           echo "Found app path: $APP_PATH"
 
           if [ -z "$APP_PATH" ]; then
-            # Try inside the archive products
-            ARCHIVE_APP="build/Runner.xcarchive/Products/Applications/Runner.app"
-            if [ -d "$ARCHIVE_APP" ]; then
-              APP_PATH="$ARCHIVE_APP"
-            fi
-          fi
-
-          if [ -z "$APP_PATH" ]; then
-            echo "ERROR: Runner.app not found. Listing build/ios for debugging:" >&2
-            find build/ios -maxdepth 5 -type d -print || true
+            echo "ERROR: Runner.app not found. Listing build/ios contents for debugging:" >&2
+            find build/ios -maxdepth 3 -type d -print || true
             exit 2
           fi
 
@@ -64,7 +43,7 @@ workflows:
           mkdir -p "$PAYLOAD_DIR"
           cp -R "$APP_PATH" "$PAYLOAD_DIR/"
 
-          # Basic validation: Info.plist must exist
+          # Ensure Info.plist exists inside the app (basic validation)
           if [ ! -f "$PAYLOAD_DIR/Runner.app/Info.plist" ]; then
             echo "ERROR: Info.plist missing inside Runner.app" >&2
             ls -la "$PAYLOAD_DIR/Runner.app" || true
@@ -74,9 +53,10 @@ workflows:
           IPA_NAME="Balitacare.ipa"
           IPA_PATH="$ARTIFACTS_DIR/$IPA_NAME"
 
-          # Create IPA (zip the Payload directory). Use -q to suppress massive output but keep error code.
+          # Create IPA (zip the Payload directory)
           (cd "$PAYLOAD_DIR" && zip -r "$IPA_PATH" Payload) || { echo "zip failed"; exit 4; }
 
+          # Check IPA size (sanity check)
           echo "IPA produced:" && ls -lh "$IPA_PATH" || true
 
           # Clean
