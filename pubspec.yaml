@@ -19,7 +19,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: ">=3.3.4 <4.0.0"
+  sdk: ">=3.4.0 <4.0.0"
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -47,7 +47,7 @@ dependencies:
   flutter_screenutil: ^5.9.3
   intl: any
   marquee: ^2.2.3
-  month_year_picker: ^0.3.0+1
+  month_year_picker: ^0.5.0+1
   open_file: ^3.5.4
   path: any
   path_provider: ^2.1.4
