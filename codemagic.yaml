@@ -2,13 +2,38 @@ workflows:
   ios-release-altstore:
     name: iOS Release (AltStore Ready)
     max_build_duration: 60
+    instance_type: mac_mini_m2
     environment:
       flutter: stable
       xcode: latest
       cocoapods: default
+      groups:
+        # Add your Codemagic environment variable group here
+        # - app_store_credentials
+      ios_signing:
+        distribution_type: development
+        bundle_identifier: com.aldayanday.balitacare
       vars:
-        BUNDLE_ID: "com.example.aplikasibalita"
+        XCODE_WORKSPACE: "ios/Runner.xcworkspace"
+        XCODE_SCHEME: "Runner"
+        BUNDLE_ID: "com.aldayanday.balitacare"
     scripts:
+      - name: Set up keychain
+        script: |
+          keychain initialize
+          
+      - name: Fetch signing files (auto)
+        script: |
+          # This will automatically create development certificate if needed
+          app-store-connect fetch-signing-files "$BUNDLE_ID" \
+            --type IOS_APP_DEVELOPMENT \
+            --create
+          
+      - name: Use signing files
+        script: |
+          keychain add-certificates
+          xcode-project use-profiles
+          
       - name: Clean project
         script: |
           flutter clean
@@ -18,55 +43,18 @@ workflows:
         script: |
           dart run flutter_launcher_icons
 
-      - name: Build iOS app bundle
+      - name: Build signed IPA for AltStore
         script: |
-          # Build iOS archive with development signing (AltStore compatible)
-          flutter build ios --release --no-codesign
+          # Build iOS with development signing
+          flutter build ipa --release \
+            --export-options-plist=$HOME/export_options.plist
           
-      - name: Create IPA for AltStore
-        script: |
-          # Create artifacts directory
+          # Copy IPA to artifacts
           mkdir -p $CM_BUILD_DIR/artifacts
+          cp build/ios/ipa/*.ipa $CM_BUILD_DIR/artifacts/Balitacare.ipa
           
-          # Navigate to build output
-          cd build/ios/iphoneos
-          
-          # Verify Runner.app exists and is valid
-          if [ ! -d "Runner.app" ]; then
-            echo "Error: Runner.app not found!"
-            exit 1
-          fi
-          
-          echo "Contents of Runner.app:"
-          ls -la Runner.app/
-          
-          # Create proper IPA structure for AltStore
-          mkdir -p Payload
-          
-          # Copy the entire Runner.app bundle (preserving structure and permissions)
-          cp -Rp Runner.app Payload/
-          
-          # Ensure Info.plist exists
-          if [ ! -f "Payload/Runner.app/Info.plist" ]; then
-            echo "Error: Info.plist not found in Runner.app!"
-            exit 1
-          fi
-          
-          # Create IPA with proper compression (store method for AltStore compatibility)
-          cd Payload
-          zip -r -0 "$CM_BUILD_DIR/artifacts/Balitacare.ipa" Runner.app
-          cd ..
-          
-          # Clean up
-          rm -rf Payload
-          
-          # Verify IPA structure
-          echo "IPA created successfully:"
-          ls -lh "$CM_BUILD_DIR/artifacts/"
-          
-          # Show IPA contents (for debugging)
-          echo "IPA contents:"
-          unzip -l "$CM_BUILD_DIR/artifacts/Balitacare.ipa" | head -20
+          # Verify
+          ls -lh $CM_BUILD_DIR/artifacts/
 
     artifacts:
       - $CM_BUILD_DIR/artifacts/*.ipa
