@@ -1,6 +1,6 @@
 workflows:
-  ios-release-no-shorebird:
-    name: iOS Release (No Code Sign)
+  ios-release-altstore:
+    name: iOS Release (AltStore Ready)
     max_build_duration: 60
     environment:
       flutter: stable
@@ -9,10 +9,6 @@ workflows:
       vars:
         BUNDLE_ID: "com.example.aplikasibalita"
     scripts:
-      - name: Set up code signing settings on Xcode project
-        script: |
-          xcode-project use-profiles
-
       - name: Clean project
         script: |
           flutter clean
@@ -24,25 +20,31 @@ workflows:
 
       - name: Build iOS and create IPA
         script: |
-          # Build without codesigning for development/testing
+          # Build iOS release (no code sign)
           flutter build ios --release --no-codesign
           
-          # Create artifacts directory
-          mkdir -p $CM_BUILD_DIR/artifacts
-          
-          # Create IPA manually without signing
+          # Navigate to build folder
           cd build/ios/iphoneos
+          
+          # Make sure Payload folder exists and contains Runner.app
           mkdir -p Payload
           cp -r Runner.app Payload/
-          zip -r $CM_BUILD_DIR/artifacts/Balitacare-unsigned.ipa Payload
+          
+          # Create artifacts folder
+          mkdir -p $CM_BUILD_DIR/artifacts
+          
+          # Zip Payload into IPA with professional name
+          zip -r $CM_BUILD_DIR/artifacts/Balitacare.ipa Payload
+          
+          # Clean up Payload folder
           rm -rf Payload
           
-          # Verify IPA was created
+          # Verify IPA
           ls -lh $CM_BUILD_DIR/artifacts/
 
     artifacts:
       - $CM_BUILD_DIR/artifacts/*.ipa
-    
+
     publishing:
       email:
         recipients:
