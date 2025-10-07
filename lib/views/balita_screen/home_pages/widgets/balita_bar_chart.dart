@@ -68,8 +68,6 @@ class BalitaBarChart extends StatelessWidget {
                           .shift, // Agar label tidak terpotong
                       majorGridLines: MajorGridLines(
                           width: 0), // Menghilangkan gridlines besar
-                      minorGridLines: MinorGridLines(
-                          width: 0), // Menghilangkan gridlines kecil
                       axisLine:
                           AxisLine(width: 0), // Menghilangkan garis sumbu X
                       labelStyle: TextStyle(
@@ -83,8 +81,6 @@ class BalitaBarChart extends StatelessWidget {
                           AxisLine(width: 0), // Menghilangkan garis sumbu Y
                       majorGridLines: MajorGridLines(
                           width: 0), // Menghilangkan gridlines besar
-                      minorGridLines: MinorGridLines(
-                          width: 0), // Menghilangkan gridlines kecil
                       labelStyle: TextStyle(
                           fontSize: 12), // Ukuran font untuk angka pada Y
                       majorTickLines: MajorTickLines(
@@ -92,7 +88,7 @@ class BalitaBarChart extends StatelessWidget {
                               0), // Menghilangkan garis kecil di samping angka Y
                     ),
                     tooltipBehavior: TooltipBehavior(enable: true),
-                    series: <ChartSeries>[
+                    series: <CartesianSeries<dynamic, dynamic>>[
                       ColumnSeries<custom_chart.BarChartData, String>(
                         dataSource: chartData,
                         xValueMapper: (custom_chart.BarChartData data, _) =>
