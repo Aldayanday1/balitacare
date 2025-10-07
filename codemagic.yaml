@@ -1,0 +1,27 @@
+workflows:
+  ios-release-no-shorebird:
+    name: iOS Release
+    environment:
+      flutter: stable
+      xcode: latest
+      vars:
+        BUNDLE_ID: "com.example.balitacare"
+    scripts:
+      - name: Clean project
+        script: |
+          flutter clean
+          flutter pub get
+
+      - name: Generate app icons
+        script: flutter pub run flutter_launcher_icons:main
+
+      - name: Build iOS IPA (no code signing)
+        script: flutter build ipa --no-codesign
+
+      - name: Rename and move IPA
+        script: |
+          mkdir -p build/ios/ipa
+          mv build/ios/ipa/*.ipa build/ios/ipa/Balitacare.ipa
+
+    artifacts:
+      - build/ios/ipa/Balitacare.ipa
