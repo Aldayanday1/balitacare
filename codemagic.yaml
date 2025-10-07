@@ -1,20 +1,13 @@
 workflows:
-  # === WORKFLOW 1: SIGNED IPA (RECOMMENDED FOR ALTSTORE) ===
-  ios-release-signed:
-    name: iOS Signed (AltStore Ready - Requires Apple Developer)
+  ios-release-no-codesign:
+    name: iOS Release (No Code Sign)
     max_build_duration: 60
     environment:
       flutter: stable
       xcode: latest
       cocoapods: default
       vars:
-        BUNDLE_ID: "com.aldayanday.balitacare"
-        XCODE_WORKSPACE: "ios/Runner.xcworkspace"
-        XCODE_SCHEME: "Runner"
-      # Uncomment setelah setup code signing di Codemagic UI:
-      ios_signing:
-        distribution_type: development
-        bundle_identifier: com.aldayanday.balitacare
+        BUNDLE_ID: "com.example.aplikasibalita"
     scripts:
       - name: Clean project
         script: |
@@ -25,111 +18,35 @@ workflows:
         script: |
           dart run flutter_launcher_icons
 
-      - name: Setup code signing (if configured)
+      - name: Build iOS release and create IPA (fixed)
         script: |
-          # Auto-setup code signing jika sudah dikonfigurasi
-          xcode-project use-profiles || echo "Skipping auto code signing setup"
-
-      - name: Build signed iOS IPA
-        script: |
-          # Coba build dengan signing (akan gagal jika belum setup)
-          flutter build ipa --release || {
-            echo "⚠️  BUILD FAILED: Code signing belum dikonfigurasi!"
-            echo "📋 Silakan ikuti panduan di SETUP_ALTSTORE.md"
-            exit 1
-          }
-
-      - name: Move signed IPA to artifacts
-        script: |
-          mkdir -p $CM_BUILD_DIR/artifacts
-          if [ -f "build/ios/ipa"/*.ipa ]; then
-            cp build/ios/ipa/*.ipa $CM_BUILD_DIR/artifacts/Balitacare-signed.ipa
-            echo "✅ Signed IPA created successfully!"
-            ls -lh $CM_BUILD_DIR/artifacts/
-          else
-            echo "❌ IPA not found!"
-            exit 1
-          fi
-
-    artifacts:
-      - $CM_BUILD_DIR/artifacts/*.ipa
-    
-    publishing:
-      email:
-        recipients:
-          - onlymarfa69@gmail.com
-        notify:
-          success: true
-          failure: true
-
-  # === WORKFLOW 2: UNSIGNED IPA (FALLBACK - TIDAK BISA INSTALL) ===
-  ios-release-unsigned:
-    name: iOS Unsigned (Testing Only - Cannot Install)
-    max_build_duration: 60
-    environment:
-      flutter: stable
-      xcode: latest
-      cocoapods: default
-      vars:
-        BUNDLE_ID: "com.aldayanday.balitacare"
-    scripts:
-      - name: Clean project
-        script: |
-          flutter clean
-          flutter pub get
-
-      - name: Generate app icons
-        script: |
-          dart run flutter_launcher_icons
-
-      - name: Build iOS (no signing)
-        script: |
+          # Build iOS release without codesigning
           flutter build ios --release --no-codesign
           
-      - name: Create unsigned IPA
-        script: |
-          # Create artifacts directory
-          mkdir -p $CM_BUILD_DIR/artifacts
-          
-          # Navigate to build output
+          # Go to build output
           cd build/ios/iphoneos
           
-          # Verify Runner.app exists and is valid
-          if [ ! -d "Runner.app" ]; then
-            echo "Error: Runner.app not found!"
-            exit 1
-          fi
-          
-          echo "Contents of Runner.app:"
-          ls -la Runner.app/
-          
-          # Create proper IPA structure for AltStore
-          mkdir -p Payload
-          
-          # Copy the entire Runner.app bundle (preserving structure and permissions)
-          cp -Rp Runner.app Payload/
-          
-          # Ensure Info.plist exists
-          if [ ! -f "Payload/Runner.app/Info.plist" ]; then
-            echo "Error: Info.plist not found in Runner.app!"
-            exit 1
-          fi
-          
-          # Create IPA with proper compression (store method for AltStore compatibility)
-          cd Payload
-          zip -r -0 "$CM_BUILD_DIR/artifacts/Balitacare.ipa" Runner.app
-          cd ..
-          
-          # Clean up
+          # Remove old Payload if exists
           rm -rf Payload
           
-          # Verify IPA structure
-          echo "IPA created successfully:"
-          ls -lh "$CM_BUILD_DIR/artifacts/"
+          # Make sure Runner.app exists
+          if [ ! -d "Runner.app" ]; then
+            echo "Error: Runner.app not found! Build failed."
+            exit 1
+          fi
           
-          # Show IPA contents (for debugging)
-          echo "IPA contents:"
-          unzip -l "$CM_BUILD_DIR/artifacts/Balitacare.ipa" | head -20
+          # Create Payload folder and copy Runner.app
+          mkdir Payload
+          cp -r Runner.app Payload/
+          
+          # Zip Payload into IPA with professional name
+          zip -r $CM_BUILD_DIR/artifacts/Balitacare.ipa Payload
+          
+          # Clean up Payload folder
+          rm -rf Payload
+          
+          # Verify IPA content
+          unzip -l $CM_BUILD_DIR/artifacts/Balitacare.ipa
 
     artifacts:
       - $CM_BUILD_DIR/artifacts/*.ipa
