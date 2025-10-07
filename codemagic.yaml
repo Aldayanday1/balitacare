@@ -18,29 +18,55 @@ workflows:
         script: |
           dart run flutter_launcher_icons
 
-      - name: Build iOS and create IPA
+      - name: Build iOS app bundle
         script: |
-          # Build iOS release (no code sign)
+          # Build iOS archive with development signing (AltStore compatible)
           flutter build ios --release --no-codesign
           
-          # Navigate to build folder
-          cd build/ios/iphoneos
-          
-          # Make sure Payload folder exists and contains Runner.app
-          mkdir -p Payload
-          cp -r Runner.app Payload/
-          
-          # Create artifacts folder
+      - name: Create IPA for AltStore
+        script: |
+          # Create artifacts directory
           mkdir -p $CM_BUILD_DIR/artifacts
           
-          # Zip Payload into IPA with professional name
-          zip -r $CM_BUILD_DIR/artifacts/Balitacare.ipa Payload
+          # Navigate to build output
+          cd build/ios/iphoneos
           
-          # Clean up Payload folder
+          # Verify Runner.app exists and is valid
+          if [ ! -d "Runner.app" ]; then
+            echo "Error: Runner.app not found!"
+            exit 1
+          fi
+          
+          echo "Contents of Runner.app:"
+          ls -la Runner.app/
+          
+          # Create proper IPA structure for AltStore
+          mkdir -p Payload
+          
+          # Copy the entire Runner.app bundle (preserving structure and permissions)
+          cp -Rp Runner.app Payload/
+          
+          # Ensure Info.plist exists
+          if [ ! -f "Payload/Runner.app/Info.plist" ]; then
+            echo "Error: Info.plist not found in Runner.app!"
+            exit 1
+          fi
+          
+          # Create IPA with proper compression (store method for AltStore compatibility)
+          cd Payload
+          zip -r -0 "$CM_BUILD_DIR/artifacts/Balitacare.ipa" Runner.app
+          cd ..
+          
+          # Clean up
           rm -rf Payload
           
-          # Verify IPA
-          ls -lh $CM_BUILD_DIR/artifacts/
+          # Verify IPA structure
+          echo "IPA created successfully:"
+          ls -lh "$CM_BUILD_DIR/artifacts/"
+          
+          # Show IPA contents (for debugging)
+          echo "IPA contents:"
+          unzip -l "$CM_BUILD_DIR/artifacts/Balitacare.ipa" | head -20
 
     artifacts:
       - $CM_BUILD_DIR/artifacts/*.ipa
