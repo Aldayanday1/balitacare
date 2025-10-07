@@ -1,39 +1,21 @@
 workflows:
-  ios-release-altstore:
-    name: iOS Release (AltStore Ready)
+  # === WORKFLOW 1: SIGNED IPA (RECOMMENDED FOR ALTSTORE) ===
+  ios-release-signed:
+    name: iOS Signed (AltStore Ready - Requires Apple Developer)
     max_build_duration: 60
-    instance_type: mac_mini_m2
     environment:
       flutter: stable
       xcode: latest
       cocoapods: default
-      groups:
-        # Add your Codemagic environment variable group here
-        # - app_store_credentials
-      ios_signing:
-        distribution_type: development
-        bundle_identifier: com.aldayanday.balitacare
       vars:
+        BUNDLE_ID: "com.aldayanday.balitacare"
         XCODE_WORKSPACE: "ios/Runner.xcworkspace"
         XCODE_SCHEME: "Runner"
-        BUNDLE_ID: "com.aldayanday.balitacare"
+      # Uncomment setelah setup code signing di Codemagic UI:
+      # ios_signing:
+      #   distribution_type: development
+      #   bundle_identifier: com.aldayanday.balitacare
     scripts:
-      - name: Set up keychain
-        script: |
-          keychain initialize
-          
-      - name: Fetch signing files (auto)
-        script: |
-          # This will automatically create development certificate if needed
-          app-store-connect fetch-signing-files "$BUNDLE_ID" \
-            --type IOS_APP_DEVELOPMENT \
-            --create
-          
-      - name: Use signing files
-        script: |
-          keychain add-certificates
-          xcode-project use-profiles
-          
       - name: Clean project
         script: |
           flutter clean
@@ -43,18 +25,111 @@ workflows:
         script: |
           dart run flutter_launcher_icons
 
-      - name: Build signed IPA for AltStore
+      - name: Setup code signing (if configured)
         script: |
-          # Build iOS with development signing
-          flutter build ipa --release \
-            --export-options-plist=$HOME/export_options.plist
-          
-          # Copy IPA to artifacts
+          # Auto-setup code signing jika sudah dikonfigurasi
+          xcode-project use-profiles || echo "Skipping auto code signing setup"
+
+      - name: Build signed iOS IPA
+        script: |
+          # Coba build dengan signing (akan gagal jika belum setup)
+          flutter build ipa --release || {
+            echo "⚠️  BUILD FAILED: Code signing belum dikonfigurasi!"
+            echo "📋 Silakan ikuti panduan di SETUP_ALTSTORE.md"
+            exit 1
+          }
+
+      - name: Move signed IPA to artifacts
+        script: |
           mkdir -p $CM_BUILD_DIR/artifacts
-          cp build/ios/ipa/*.ipa $CM_BUILD_DIR/artifacts/Balitacare.ipa
+          if [ -f "build/ios/ipa"/*.ipa ]; then
+            cp build/ios/ipa/*.ipa $CM_BUILD_DIR/artifacts/Balitacare-signed.ipa
+            echo "✅ Signed IPA created successfully!"
+            ls -lh $CM_BUILD_DIR/artifacts/
+          else
+            echo "❌ IPA not found!"
+            exit 1
+          fi
+
+    artifacts:
+      - $CM_BUILD_DIR/artifacts/*.ipa
+    
+    publishing:
+      email:
+        recipients:
+          - onlymarfa69@gmail.com
+        notify:
+          success: true
+          failure: true
+
+  # === WORKFLOW 2: UNSIGNED IPA (FALLBACK - TIDAK BISA INSTALL) ===
+  ios-release-unsigned:
+    name: iOS Unsigned (Testing Only - Cannot Install)
+    max_build_duration: 60
+    environment:
+      flutter: stable
+      xcode: latest
+      cocoapods: default
+      vars:
+        BUNDLE_ID: "com.aldayanday.balitacare"
+    scripts:
+      - name: Clean project
+        script: |
+          flutter clean
+          flutter pub get
+
+      - name: Generate app icons
+        script: |
+          dart run flutter_launcher_icons
+
+      - name: Build iOS (no signing)
+        script: |
+          flutter build ios --release --no-codesign
           
-          # Verify
-          ls -lh $CM_BUILD_DIR/artifacts/
+      - name: Create unsigned IPA
+        script: |
+          # Create artifacts directory
+          mkdir -p $CM_BUILD_DIR/artifacts
+          
+          # Navigate to build output
+          cd build/ios/iphoneos
+          
+          # Verify Runner.app exists and is valid
+          if [ ! -d "Runner.app" ]; then
+            echo "Error: Runner.app not found!"
+            exit 1
+          fi
+          
+          echo "Contents of Runner.app:"
+          ls -la Runner.app/
+          
+          # Create proper IPA structure for AltStore
+          mkdir -p Payload
+          
+          # Copy the entire Runner.app bundle (preserving structure and permissions)
+          cp -Rp Runner.app Payload/
+          
+          # Ensure Info.plist exists
+          if [ ! -f "Payload/Runner.app/Info.plist" ]; then
+            echo "Error: Info.plist not found in Runner.app!"
+            exit 1
+          fi
+          
+          # Create IPA with proper compression (store method for AltStore compatibility)
+          cd Payload
+          zip -r -0 "$CM_BUILD_DIR/artifacts/Balitacare.ipa" Runner.app
+          cd ..
+          
+          # Clean up
+          rm -rf Payload
+          
+          # Verify IPA structure
+          echo "IPA created successfully:"
+          ls -lh "$CM_BUILD_DIR/artifacts/"
+          
+          # Show IPA contents (for debugging)
+          echo "IPA contents:"
+          unzip -l "$CM_BUILD_DIR/artifacts/Balitacare.ipa" | head -20
 
     artifacts:
       - $CM_BUILD_DIR/artifacts/*.ipa
