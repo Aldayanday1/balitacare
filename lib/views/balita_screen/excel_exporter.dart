@@ -26,12 +26,10 @@ Future<String?> exportToExcelWithSAF(List<Balita> balitaList) async {
     backgroundColorHex: headerBgColor,
     horizontalAlign: HorizontalAlign.Center,
     verticalAlign: VerticalAlign.Center,
-    leftBorder: Border(
-        borderStyle: BorderStyle.Thin,
-        borderColorHex: whiteColor),
-    rightBorder: Border(
-        borderStyle: BorderStyle.Thin,
-        borderColorHex: whiteColor),
+    leftBorder:
+        Border(borderStyle: BorderStyle.Thin, borderColorHex: whiteColor),
+    rightBorder:
+        Border(borderStyle: BorderStyle.Thin, borderColorHex: whiteColor),
   );
 
   // Gaya untuk header utama
@@ -47,7 +45,8 @@ Future<String?> exportToExcelWithSAF(List<Balita> balitaList) async {
         Border(borderStyle: BorderStyle.Thin, borderColorHex: blackColor),
     rightBorder:
         Border(borderStyle: BorderStyle.Thin, borderColorHex: blackColor),
-    topBorder: Border(borderStyle: BorderStyle.Thin, borderColorHex: blackColor),
+    topBorder:
+        Border(borderStyle: BorderStyle.Thin, borderColorHex: blackColor),
   );
 
   // Gaya untuk isi data
@@ -207,11 +206,7 @@ Future<String?> exportToExcelWithSAF(List<Balita> balitaList) async {
 
 Future<void> showDownloadSuccessNotification(
     String fileName, String filePath) async {
-  String fileNameOnly = fileName
-      .split('/')
-      .last
-      .split(':')
-      .last;
+  String fileNameOnly = fileName.split('/').last.split(':').last;
 
   print("Menampilkan notifikasi untuk file: $fileNameOnly");
 
