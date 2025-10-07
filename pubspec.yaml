@@ -42,8 +42,10 @@ dependencies:
     sdk: flutter
   flutter_file_dialog: ^3.0.1
   flutter_local_notifications: ^12.0.4
+  flutter_localizations:
+    sdk: flutter
   flutter_screenutil: ^5.9.3
-  intl: ^0.18.0
+  intl: any
   marquee: ^2.2.3
   month_year_picker: ^0.3.0+1
   open_file: ^3.0.3
