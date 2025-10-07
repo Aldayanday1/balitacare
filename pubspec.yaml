@@ -55,8 +55,8 @@ dependencies:
   quickalert: ^1.1.0
   saf: ^1.0.3+4
   sqflite: ^2.0.0+4
-  syncfusion_flutter_charts: ^20.4.54
-  syncfusion_flutter_datepicker: ^20.3.55
+  syncfusion_flutter_charts: ^27.1.48
+  syncfusion_flutter_datepicker: ^27.1.48
   table_calendar: ^3.0.0
   url_launcher: ^6.3.1
 
