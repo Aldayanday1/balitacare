@@ -1,27 +1,50 @@
 workflows:
   ios-release-no-shorebird:
-    name: iOS Release
+    name: iOS Release (No Code Sign)
+    max_build_duration: 60
     environment:
       flutter: stable
       xcode: latest
+      cocoapods: default
       vars:
-        BUNDLE_ID: "com.example.balitacare"
+        BUNDLE_ID: "com.example.aplikasibalita"
     scripts:
+      - name: Set up code signing settings on Xcode project
+        script: |
+          xcode-project use-profiles
+
       - name: Clean project
         script: |
           flutter clean
           flutter pub get
 
       - name: Generate app icons
-        script: flutter pub run flutter_launcher_icons:main
-
-      - name: Build iOS IPA (no code signing)
-        script: flutter build ipa --no-codesign
-
-      - name: Rename and move IPA
         script: |
-          mkdir -p build/ios/ipa
-          mv build/ios/ipa/*.ipa build/ios/ipa/Balitacare.ipa
+          dart run flutter_launcher_icons
+
+      - name: Build iOS (no code sign - for testing only)
+        script: |
+          # Build without codesigning for development/testing
+          flutter build ios --release --no-codesign
+          
+          # Create IPA manually without signing
+          cd build/ios/iphoneos
+          mkdir -p Payload
+          cp -r Runner.app Payload/
+          zip -r Balitacare-unsigned.ipa Payload
+          
+      - name: Move artifacts
+        script: |
+          mkdir -p $CM_BUILD_DIR/artifacts
+          cp build/ios/iphoneos/Balitacare-unsigned.ipa $CM_BUILD_DIR/artifacts/
 
     artifacts:
-      - build/ios/ipa/Balitacare.ipa
+      - $CM_BUILD_DIR/artifacts/*.ipa
+    
+    publishing:
+      email:
+        recipients:
+          - onlymarfa69@gmail.com
+        notify:
+          success: true
+          failure: true
