@@ -1,5 +1,5 @@
 import 'package:animated_splash_screen/animated_splash_screen.dart';
-import 'package:aplikasibalita/views/balita_screen/home_pages/home_screen.dart';
+import 'package:aplikasibalita/views/main_navigation_screen.dart';
 import 'package:flutter/material.dart';
 
 class SplashScreenPage extends StatefulWidget {
@@ -56,7 +56,7 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
                 ),
               ),
             ),
-            nextScreen: HomeScreen(),
+            nextScreen: MainNavigationScreen(),
             splashTransition: SplashTransition.fadeTransition,
             backgroundColor: Colors.white,
           ),

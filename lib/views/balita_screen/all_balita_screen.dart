@@ -2,7 +2,6 @@ import 'package:aplikasibalita/controllers/balita_controller.dart';
 import 'package:aplikasibalita/models/balita.dart';
 import 'package:aplikasibalita/views/balita_screen/data_balita_screen.dart';
 import 'package:aplikasibalita/views/balita_screen/excel_exporter.dart';
-import 'package:aplikasibalita/views/balita_screen/navigation_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -512,8 +511,6 @@ class _AllBalitaScreenState extends State<AllBalitaScreen> {
           ),
         ),
       ),
-      bottomNavigationBar: CustomBottomNavigation(
-          selectedIndex: 2), // Posisi index untuk HomeScreen
     );
   }
 }

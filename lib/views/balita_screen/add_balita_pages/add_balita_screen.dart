@@ -1,6 +1,5 @@
 import 'package:aplikasibalita/controllers/balita_controller.dart';
 import 'package:aplikasibalita/models/balita.dart';
-import 'package:aplikasibalita/views/balita_screen/navigation_bar.dart';
 import 'package:aplikasibalita/views/perkembangan_screen/add_perkembangan_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -749,8 +748,6 @@ class _AddBalitaScreenState extends State<AddBalitaScreen> {
           ),
         ),
       ),
-      bottomNavigationBar: CustomBottomNavigation(
-          selectedIndex: 1), // Posisi index untuk HomeScreen
     );
   }
 }

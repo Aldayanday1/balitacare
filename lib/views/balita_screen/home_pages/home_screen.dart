@@ -6,7 +6,6 @@ import 'package:aplikasibalita/views/balita_screen/home_pages/widgets/balita_car
 import 'package:aplikasibalita/views/balita_screen/home_pages/widgets/faq_dialog.dart';
 import 'package:aplikasibalita/views/balita_screen/home_pages/widgets/gender_filter_menu.dart';
 import 'package:aplikasibalita/views/balita_screen/home_pages/widgets/status_card.dart';
-import 'package:aplikasibalita/views/balita_screen/navigation_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -717,9 +716,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         ),
-      ),
-      bottomNavigationBar: CustomBottomNavigation(
-        selectedIndex: 0,
       ),
     );
   }
